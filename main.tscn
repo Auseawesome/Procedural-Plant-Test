@@ -36,6 +36,7 @@ script = ExtResource("1_ig7tw")
 radius = 0.95
 length = 10.0
 mesh = SubResource("QuadMesh_1bvp3")
+quarter_turns = 40
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=849368088]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.6402013)
