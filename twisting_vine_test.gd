@@ -19,20 +19,20 @@ func _ready() -> void:
 	var b := unscaled_b * radius;
 	var c := unscaled_c * radius;
 	
-	var zGradient := sqrt(c*c+b*b) * length/8
+	var lenGrad := sqrt(c*c+b*b) * length/8
 
-	var pointA := position + Vector3(a, 0, -length/2);
-	var pointAIn := Vector3(c, -b, -zGradient)
-	var pointAOut := Vector3(c, b, zGradient)
-	var pointB := position + Vector3(0, a, -length/4);
-	var pointBIn := Vector3(b, c, -zGradient)
-	var pointBOut := Vector3(-b, c, zGradient)
+	var pointA := position + Vector3(a, -length/2, 0);
+	var pointAIn := Vector3(c, -lenGrad, -b)
+	var pointAOut := Vector3(c, lenGrad, b)
+	var pointB := position + Vector3(0, -length/4, a);
+	var pointBIn := Vector3(b, -lenGrad, c)
+	var pointBOut := Vector3(-b, lenGrad, c)
 	var pointC := position + Vector3(-a, 0, 0);
-	var pointCIn := Vector3(-c, b, -zGradient)
-	var pointCOut := Vector3(-c, -b, zGradient)
-	var pointD := position + Vector3(0, -a, length/4);
-	var pointDIn := Vector3(-b, -c, -zGradient)
-	var pointDOut := Vector3(b, -c, zGradient)
+	var pointCIn := Vector3(-c, -lenGrad, b)
+	var pointCOut := Vector3(-c, lenGrad, -b)
+	var pointD := position + Vector3(0, length/4, -a);
+	var pointDIn := Vector3(-b, -lenGrad, -c)
+	var pointDOut := Vector3(b, lenGrad, -c)
 
 	curve.bake_interval = 0.05
 	
@@ -40,16 +40,11 @@ func _ready() -> void:
 	curve.add_point(pointB, pointBIn, pointBOut);
 	curve.add_point(pointC, pointCIn, pointCOut);
 	curve.add_point(pointD, pointDIn, pointDOut);
-	curve.add_point(pointA + Vector3(0, 0, length), pointAIn, Vector3.ZERO);
+	curve.add_point(pointA + Vector3(0, length, 0), pointAIn, Vector3.ZERO);
 
-func _process(delta: float) -> void:
-	var rotation_quat = Quaternion.from_euler(delta*rotation_angles*PI/180)
+	update_mesh()
 
-	for point_id in curve.point_count:
-		curve.set_point_position(point_id, rotation_quat * curve.get_point_position(point_id));
-		curve.set_point_in(point_id, rotation_quat * curve.get_point_in(point_id));
-		curve.set_point_out(point_id, rotation_quat * curve.get_point_out(point_id));
-
+func update_mesh() -> void:
 	var baked_points = curve.get_baked_points();
 
 	for point_id in len(baked_points):
