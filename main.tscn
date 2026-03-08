@@ -2,13 +2,29 @@
 
 [ext_resource type="Script" uid="uid://b0ooiwwa1h7ad" path="res://twisting_vine_test.gd" id="1_ig7tw"]
 [ext_resource type="Script" uid="uid://csjccrhj5wnx7" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="2_1bvp3"]
+[ext_resource type="Texture2D" uid="uid://ckdxya8wosjsq" path="res://circle.svg" id="2_lquwl"]
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="3_lquwl"]
 [ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="4_7mycd"]
+[ext_resource type="Script" uid="uid://dfurvd8yev6y0" path="res://player.gd" id="4_272bh"]
 
 [sub_resource type="Curve3D" id="Curve3D_0xm2m"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7mycd"]
+transparency = 1
+albedo_color = Color(0, 0, 0, 1)
+albedo_texture = ExtResource("2_lquwl")
+billboard_mode = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_1bvp3"]
+material = SubResource("StandardMaterial3D_7mycd")
+size = Vector2(0.1, 0.1)
+
 [sub_resource type="Resource" id="Resource_272bh"]
 script = ExtResource("3_lquwl")
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_7mycd"]
+top_radius = 0.9
+bottom_radius = 0.9
 
 [node name="Node3D" type="Node3D" unique_id=1426465932]
 
@@ -16,17 +32,11 @@ script = ExtResource("3_lquwl")
 curve = SubResource("Curve3D_0xm2m")
 script = ExtResource("1_ig7tw")
 radius = 1.0
-length = 1.0
-rotation_angles = Vector3(10, 20, 0)
-
-[node name="PhantomCamera3D" type="Node3D" parent="." unique_id=1417515565]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.3167152)
-script = ExtResource("2_1bvp3")
-tween_resource = SubResource("Resource_272bh")
-metadata/_custom_type_script = "uid://csjccrhj5wnx7"
+length = 2.0
+mesh = SubResource("QuadMesh_1bvp3")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=849368088]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.3167152)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.6402013)
 top_level = true
 
 [node name="PhantomCameraHost" type="Node" parent="Camera3D" unique_id=853986436]
@@ -35,4 +45,17 @@ process_physics_priority = 300
 script = ExtResource("4_7mycd")
 metadata/_custom_type_script = "uid://bd046eokvcnu2"
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=312311578]
+[node name="Player" type="Node3D" parent="." unique_id=1048919993]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.6402013)
+script = ExtResource("4_272bh")
+
+[node name="PhantomCamera3D" type="Node3D" parent="Player" unique_id=1417515565]
+script = ExtResource("2_1bvp3")
+tween_resource = SubResource("Resource_272bh")
+metadata/_custom_type_script = "uid://csjccrhj5wnx7"
+
+[node name="SpotLight3D" type="SpotLight3D" parent="Player" unique_id=1500186793]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1342741822]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+mesh = SubResource("CylinderMesh_7mycd")
