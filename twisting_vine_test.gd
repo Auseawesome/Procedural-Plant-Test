@@ -23,6 +23,12 @@ const unscaled_c := 0.998737689 - unscaled_a
 		if (is_node_ready()):
 			update_curve();
 			update_mesh();
+@export var bend_angle: float:
+	set(value):
+		bend_angle = value;
+		if (is_node_ready()):
+			update_curve();
+			update_mesh();
 
 var instance_cache: Array[RID];
 
@@ -56,19 +62,23 @@ func update_curve() -> void:
 	
 	for i in quarter_turns+1:
 		if i % 4 == 0:
-			curve.add_point(pointA + Vector3(0, length/quarter_turns*(i-quarter_turns/2.0), 0), pointAIn, pointAOut);
+			curve.add_point(pointA + Vector3(0, length/quarter_turns*(i), 0), pointAIn, pointAOut);
 		elif i % 4 == 1:
-			curve.add_point(pointB + Vector3(0, length/quarter_turns*(i-quarter_turns/2.0), 0), pointBIn, pointBOut);
+			curve.add_point(pointB + Vector3(0, length/quarter_turns*(i), 0), pointBIn, pointBOut);
 		elif i % 4 == 2:
-			curve.add_point(pointC + Vector3(0, length/quarter_turns*(i-quarter_turns/2.0), 0), pointCIn, pointCOut);
+			curve.add_point(pointC + Vector3(0, length/quarter_turns*(i), 0), pointCIn, pointCOut);
 		else:
-			curve.add_point(pointD + Vector3(0, length/quarter_turns*(i-quarter_turns/2.0), 0), pointDIn, pointDOut);
+			curve.add_point(pointD + Vector3(0, length/quarter_turns*(i), 0), pointDIn, pointDOut);
 
 func update_mesh() -> void:
-	var baked_points = curve.get_baked_points();
+	var baked_points := curve.get_baked_points();
 
 	for point_id in len(baked_points):
-		var xform = Transform3D(Basis(), baked_points[point_id])
+		var point_pos = baked_points[point_id];
+		var angle = point_pos.y/length*bend_angle/180*PI
+		point_pos = Vector3(cos(angle), sin(angle), 0)*length + Vector3(point_pos.x, 0, point_pos.z).rotated(Vector3(0,0,1), angle) - Vector3(0, length/2, 0);
+
+		var xform = Transform3D(Basis(), point_pos)
 
 		if len(instance_cache) < point_id + 1:
 			var render_instance = RenderingServer.instance_create();
