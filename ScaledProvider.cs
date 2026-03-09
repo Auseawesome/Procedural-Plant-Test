@@ -56,7 +56,7 @@ public partial class ScaledProvider: PointProvider
         if (Provider is null) return new Aabb();
         var position = Provider.GetBounds().Position;
         var size = Provider.GetBounds().Size;
-        return new Aabb(position * PositionScale, size * SizeScale);
+        return new Aabb(position * PositionScale, size * PositionScale);
     }
 
     public override void _Notification(int what)

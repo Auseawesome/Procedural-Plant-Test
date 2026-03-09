@@ -6,7 +6,19 @@ namespace ProceduralPlantTest;
 [GlobalClass]
 public partial class PointRenderer: Node3D
 {
-    [Export] public PointProvider Provider;
+    private PointProvider _provider;
+
+    [Export]
+    public PointProvider Provider
+    {
+        get => _provider;
+        set
+        {
+            _provider = value;
+            _provider.PointsUpdated += UpdateMesh;
+            UpdateMesh();
+        }
+    }
     
     private Mesh _pointMesh;
 
@@ -17,7 +29,7 @@ public partial class PointRenderer: Node3D
         set
         {
             _pointMesh = value;
-            RenderMesh();
+            UpdateMesh();
         }
     }
 
@@ -30,7 +42,7 @@ public partial class PointRenderer: Node3D
         set
         {
             _centered = value;
-            RenderMesh();
+            UpdateMesh();
         }
     }
 
@@ -38,19 +50,19 @@ public partial class PointRenderer: Node3D
 
     public override void _Ready()
     {
-        RenderMesh();
+        UpdateMesh();
     }
 
     public override void _ExitTree()
     {
-        Provider.PointsUpdated -= RenderMesh;
+        Provider.PointsUpdated -= UpdateMesh;
         foreach (var renderInstance in _instanceCache)
         {
             RenderingServer.FreeRid(renderInstance);
         }
     }
 
-    public void RenderMesh()
+    public void UpdateMesh()
     {
         if (Provider is null) return;
         if (!IsInsideTree()) return;
