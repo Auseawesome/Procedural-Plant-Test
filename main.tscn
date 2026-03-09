@@ -33,7 +33,7 @@ metadata/_custom_type_script = "uid://cu6f4p6ukvwt6"
 [sub_resource type="Resource" id="Resource_kek77"]
 script = ExtResource("8_kek77")
 Provider = SubResource("Resource_ycdy4")
-ArcAngle = 180.0
+ArcAngle = 183.768
 metadata/_custom_type_script = "uid://ddu7do08k67bh"
 
 [node name="Node3D" type="Node3D" unique_id=1426465932]
@@ -60,7 +60,6 @@ metadata/_custom_type_script = "uid://csjccrhj5wnx7"
 [node name="SpotLight3D" type="SpotLight3D" parent="Player" unique_id=1500186793]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1342741822]
-visible = false
 mesh = SubResource("CylinderMesh_7mycd")
 
 [node name="PointRenderer" type="Node3D" parent="." unique_id=27850479]
