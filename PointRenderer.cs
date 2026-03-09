@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Drawing;
 using Godot;
 
 namespace ProceduralPlantTest;
@@ -49,7 +48,7 @@ public partial class PointRenderer: Node3D
         {
             var pointPos = points[pointId];
             
-            Transform3D transform = new(new Basis(), pointPos);
+            Transform3D transform = new(Basis.Identity, pointPos);
 
             if (_instanceCache.Count < pointId + 1)
             {
