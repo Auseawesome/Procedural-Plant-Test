@@ -54,6 +54,24 @@ public partial class ArcProvider: PointProvider
         return Provider?.GetPoints().Select(_modifyPoint).ToList();
     }
 
+    public override Aabb GetBounds()
+    {
+        if (Provider is null) return new Aabb();
+        
+        var previousBounds = Provider.GetBounds();
+        
+        var arcOuterRadius = previousBounds.Size.Y + previousBounds.Position.X + previousBounds.Size.X;
+        
+        return _arcAngle switch
+        {
+            >= 360 => new Aabb(
+                new Vector3(-arcOuterRadius, -arcOuterRadius, previousBounds.Position.Z), 
+                new Vector3(arcOuterRadius*2, arcOuterRadius*2, previousBounds.Size.Z)
+            ),
+            _ => new Aabb()
+        };
+    }
+
     public override void _Notification(int what)
     {
         if (what == NotificationPredelete) Provider.PointsUpdated -= ChainUpdated;
