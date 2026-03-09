@@ -20,20 +20,19 @@ height = 1.0
 
 [sub_resource type="Resource" id="Resource_dg77c"]
 script = ExtResource("8_4c57u")
-Turns = 6.982
-PointCount = 1000
+Turns = 16.0
+PointCount = 1600
 metadata/_custom_type_script = "uid://cj42w5ici04sw"
 
 [sub_resource type="Resource" id="Resource_ycdy4"]
 script = ExtResource("9_efxa6")
 Provider = SubResource("Resource_dg77c")
-PositionScale = Vector3(1, 2, 1)
 metadata/_custom_type_script = "uid://cu6f4p6ukvwt6"
 
 [sub_resource type="Resource" id="Resource_kek77"]
 script = ExtResource("8_kek77")
 Provider = SubResource("Resource_ycdy4")
-ArcAngle = 210.507
+ArcAngle = 0.0
 metadata/_custom_type_script = "uid://ddu7do08k67bh"
 
 [node name="Node3D" type="Node3D" unique_id=1426465932]

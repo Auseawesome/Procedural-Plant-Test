@@ -60,7 +60,8 @@ public partial class ArcProvider: PointProvider
         
         var previousBounds = Provider.GetBounds();
         
-        var arcOuterRadius = previousBounds.Size.Y + previousBounds.Position.X + previousBounds.Size.X;
+        var arcInnerRadius = previousBounds.Size.Y + previousBounds.Position.X;
+        var arcOuterRadius = arcInnerRadius + previousBounds.Size.X;
         var arcRadians = float.DegreesToRadians(_arcAngle);
         
         return _arcAngle switch
@@ -76,6 +77,10 @@ public partial class ArcProvider: PointProvider
             >= 90 => new Aabb(
                 new Vector3(float.Cos(arcRadians)*arcOuterRadius, 0, previousBounds.Position.Z), 
                 new Vector3(arcOuterRadius - float.Cos(arcRadians)*arcOuterRadius, arcOuterRadius, previousBounds.Size.Z)
+            ),
+            >= 0 => new Aabb(
+                new Vector3(float.Cos(arcRadians)*arcInnerRadius, 0, previousBounds.Position.Z), 
+                new Vector3(arcOuterRadius - float.Cos(arcRadians)*arcInnerRadius, float.Sin(arcRadians)*arcOuterRadius, previousBounds.Size.Z)
             ),
             _ => new Aabb()
         };
