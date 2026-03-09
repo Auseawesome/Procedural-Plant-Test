@@ -5,11 +5,11 @@ using Godot;
 namespace ProceduralPlantTest;
 
 [GlobalClass]
-public abstract partial class PointProvider: Resource, IEnumerable<Vector3>
+public abstract partial class PointProvider: Resource, IEnumerable<Point>
 {
     [Signal] public delegate void PointsUpdatedEventHandler();
-    public abstract List<Vector3> GetPoints();
-    public IEnumerator<Vector3> GetEnumerator()
+    public abstract List<Point> GetPoints();
+    public IEnumerator<Point> GetEnumerator()
     {
         return GetPoints().GetEnumerator();
     }

@@ -46,9 +46,9 @@ public partial class PointRenderer: Node3D
         
         for (var pointId = 0; pointId < points.Count; pointId++)
         {
-            var pointPos = points[pointId];
+            var point = points[pointId];
             
-            Transform3D transform = new(Basis.Identity, pointPos);
+            Transform3D transform = new(Basis.Identity.Scaled(point.GetSizeVector()), point.Position);
 
             if (_instanceCache.Count < pointId + 1)
             {
@@ -56,6 +56,7 @@ public partial class PointRenderer: Node3D
                 RenderingServer.InstanceSetScenario(renderInstance, GetWorld3D().Scenario);
                 RenderingServer.InstanceSetBase(renderInstance, PointMesh.GetRid());
                 RenderingServer.InstanceSetTransform(renderInstance, transform);
+                RenderingServer.InstanceGeometrySetShaderParameter(renderInstance, "color", point.Color);
                 
                 _instanceCache.Add(renderInstance);
             }

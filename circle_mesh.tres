@@ -1,13 +1,11 @@
 [gd_resource type="QuadMesh" format=3 uid="uid://blyltpmsr6j81"]
 
-[ext_resource type="Texture2D" uid="uid://ckdxya8wosjsq" path="res://circle.svg" id="1_8pxda"]
+[ext_resource type="Shader" uid="uid://ds6g1dxgk40uy" path="res://circle_shader.gdshader" id="1_8pxda"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7mycd"]
-transparency = 1
-albedo_color = Color(0, 0, 0, 1)
-albedo_texture = ExtResource("1_8pxda")
-billboard_mode = 1
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8pxda"]
+render_priority = 0
+shader = ExtResource("1_8pxda")
 
 [resource]
-material = SubResource("StandardMaterial3D_7mycd")
+material = SubResource("ShaderMaterial_8pxda")
 size = Vector2(0.1, 0.1)

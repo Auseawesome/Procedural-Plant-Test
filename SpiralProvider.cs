@@ -35,9 +35,9 @@ public partial class SpiralProvider: PointProvider
         UpdateCurve();
     }
     
-    public override List<Vector3> GetPoints()
+    public override List<Point> GetPoints()
     {
-        return _spiralCurve.GetBakedPoints().ToList();
+        return _spiralCurve.GetBakedPoints().Select(pos => new Point(pos)).ToList();
     }
 
     public void UpdateCurve()

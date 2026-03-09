@@ -23,21 +23,32 @@ public partial class ScaledProvider: PointProvider
         }
     }
     
-    private Vector3 _scale = new(1, 1, 1);
+    private Vector3 _positionScale = new(1, 1, 1);
     
     [Export]
-    public Vector3 Scale{
-        get => _scale;
+    public Vector3 PositionScale {
+        get => _positionScale;
         set
         {
-            _scale = value;
+            _positionScale = value;
+            EmitSignal(PointProvider.SignalName.PointsUpdated);
+        }
+    }
+    
+    private float _sizeScale = 1;
+
+    [Export] public float SizeScale {
+        get => _sizeScale;
+        set
+        {
+            _sizeScale = value;
             EmitSignal(PointProvider.SignalName.PointsUpdated);
         }
     }
 
-    public override List<Vector3> GetPoints()
+    public override List<Point> GetPoints()
     {
-        return Provider?.GetPoints().Select(pos => pos*Scale).ToList();
+        return Provider?.GetPoints().Select(pos => pos.Scaled(PositionScale, SizeScale)).ToList();
     }
 
     public override void _Notification(int what)
