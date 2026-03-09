@@ -40,6 +40,11 @@ public partial class SpiralProvider: PointProvider
         return _spiralCurve.GetBakedPoints().Select(pos => new Point(pos)).ToList();
     }
 
+    public override Aabb GetBounds()
+    {
+        return new Aabb(Vector3.Zero, Vector3.One);
+    }
+
     public void UpdateCurve()
     {
         _spiralCurve.ClearPoints();
@@ -47,19 +52,19 @@ public partial class SpiralProvider: PointProvider
         var quadLen = 1.0f / _quarterTurns;
         var yHandle = quadLen / float.Pi;
 
-        Vector3 posXPoint = new(InitRadius, 0, 0);
+        Vector3 posXPoint = new(InitRadius * 2, 0, InitRadius);
         Vector3 posXIn = new(HandleRadOffset, -yHandle, -TanHandleLen);
         Vector3 posXOut = new(HandleRadOffset, yHandle, TanHandleLen);
         
-        Vector3 posZPoint = new(0, 0, InitRadius);
+        Vector3 posZPoint = new(InitRadius, 0, InitRadius * 2);
         Vector3 posZIn = new(TanHandleLen, -yHandle, HandleRadOffset);
         Vector3 posZOut = new(-TanHandleLen, yHandle, HandleRadOffset);
         
-        Vector3 negXPoint = new(-InitRadius, 0, 0);
+        Vector3 negXPoint = new(0, 0, InitRadius);
         Vector3 negXIn = new(-HandleRadOffset, -yHandle, TanHandleLen);
         Vector3 negXOut = new(-HandleRadOffset, yHandle, -TanHandleLen);
         
-        Vector3 negZPoint = new(0, 0, -InitRadius);
+        Vector3 negZPoint = new(InitRadius, 0, 0);
         Vector3 negZIn = new(-TanHandleLen, -yHandle, -HandleRadOffset);
         Vector3 negZOut = new(TanHandleLen, yHandle, -HandleRadOffset);
 

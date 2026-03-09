@@ -51,6 +51,14 @@ public partial class ScaledProvider: PointProvider
         return Provider?.GetPoints().Select(pos => pos.Scaled(PositionScale, SizeScale)).ToList();
     }
 
+    public override Aabb GetBounds()
+    {
+        if (Provider is null) return new Aabb();
+        var position = Provider.GetBounds().Position;
+        var size = Provider.GetBounds().Size;
+        return new Aabb(position * PositionScale, size * SizeScale);
+    }
+
     public override void _Notification(int what)
     {
         if (what == NotificationPredelete) Provider.PointsUpdated -= ChainUpdated;

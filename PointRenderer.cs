@@ -21,6 +21,19 @@ public partial class PointRenderer: Node3D
         }
     }
 
+    private bool _centered = true;
+
+    [Export]
+    public bool Centered
+    {
+        get => _centered;
+        set
+        {
+            _centered = value;
+            RenderMesh();
+        }
+    }
+
     private readonly List<Rid> _instanceCache = [];
 
     public override void _Ready()
@@ -48,7 +61,11 @@ public partial class PointRenderer: Node3D
         {
             var point = points[pointId];
             
-            Transform3D transform = new(Basis.Identity.Scaled(point.GetSizeVector()), point.Position);
+            var position = point.Position;
+            if (_centered)
+                position = position - Provider.GetBounds().Position - Provider.GetBounds().Size/2;
+            
+            Transform3D transform = new(Basis.Identity.Scaled(point.GetSizeVector()), position);
 
             if (_instanceCache.Count < pointId + 1)
             {
