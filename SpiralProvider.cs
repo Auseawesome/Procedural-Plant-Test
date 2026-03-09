@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Godot;
 
 namespace ProceduralPlantTest;
@@ -7,87 +6,49 @@ namespace ProceduralPlantTest;
 [GlobalClass]
 public partial class SpiralProvider: PointProvider
 {
-    /// Initial radius of the circle as determined by https://spencermortensen.com/articles/bezier-circle/
-    private const float InitRadius = 1.00005507808f * 0.5f;
-    /// Distance of control point from node tangential to the curve from https://spencermortensen.com/articles/bezier-circle/
-    private const float TanHandleLen = 0.55342925736f * 0.5f;
-    /// Distance of control point from node normal to the curve from https://spencermortensen.com/articles/bezier-circle/
-    private const float HandleRadOffset = 0.998737689f * 0.5f - InitRadius;
-    
-    private float _quarterTurns = 4;
+    private float _turns = 2;
 
-    [Export]
-    public float QuarterTurns
+    [Export(PropertyHint.Range, "0,16,or_greater")]
+    public float Turns
     {
-        get => _quarterTurns;
+        get => _turns;
         set
         {
-            _quarterTurns = value;
-            UpdateCurve();
+            _turns = float.Max(value, 0f);
+            EmitSignal(PointProvider.SignalName.PointsUpdated);
         }
     }
+    
+    private int _pointCount = 200;
 
-    private Curve3D _spiralCurve = new();
-
-    public SpiralProvider()
+    [Export(PropertyHint.Range, "0,1000,or_greater")]
+    public int PointCount
     {
-        _spiralCurve.BakeInterval = 0.05f;
-        UpdateCurve();
+        get => _pointCount;
+        set
+        {
+            _pointCount = int.Max(value, 0);
+            EmitSignal(PointProvider.SignalName.PointsUpdated);
+        }
     }
     
     public override List<Point> GetPoints()
     {
-        return _spiralCurve.GetBakedPoints().Select(pos => new Point(pos)).ToList();
+        List<Point> points = [];
+        for (var pointId = 0; pointId < PointCount; pointId++)
+        {
+            var turnAngle = _turns*float.Tau*pointId/PointCount;
+            points.Add(new Point(new Vector3(
+                (float.Cos(turnAngle)+1.0f)/2.0f,
+                ((float) pointId) / PointCount,
+                (float.Sin(turnAngle)+1.0f)/2.0f
+            )));
+        }
+        return points;
     }
 
     public override Aabb GetBounds()
     {
         return new Aabb(Vector3.Zero, Vector3.One);
-    }
-
-    public void UpdateCurve()
-    {
-        _spiralCurve.ClearPoints();
-
-        var quadLen = 1.0f / _quarterTurns;
-        var yHandle = quadLen / float.Pi;
-
-        Vector3 posXPoint = new(InitRadius * 2, 0, InitRadius);
-        Vector3 posXIn = new(HandleRadOffset, -yHandle, -TanHandleLen);
-        Vector3 posXOut = new(HandleRadOffset, yHandle, TanHandleLen);
-        
-        Vector3 posZPoint = new(InitRadius, 0, InitRadius * 2);
-        Vector3 posZIn = new(TanHandleLen, -yHandle, HandleRadOffset);
-        Vector3 posZOut = new(-TanHandleLen, yHandle, HandleRadOffset);
-        
-        Vector3 negXPoint = new(0, 0, InitRadius);
-        Vector3 negXIn = new(-HandleRadOffset, -yHandle, TanHandleLen);
-        Vector3 negXOut = new(-HandleRadOffset, yHandle, -TanHandleLen);
-        
-        Vector3 negZPoint = new(InitRadius, 0, 0);
-        Vector3 negZIn = new(-TanHandleLen, -yHandle, -HandleRadOffset);
-        Vector3 negZOut = new(TanHandleLen, yHandle, -HandleRadOffset);
-
-        for (var i = 0; i < _quarterTurns + 1; i++)
-        {
-            Vector3 lenOffset = new(0, quadLen * i, 0);
-            switch (i % 4)
-            {
-                case 0:
-                    _spiralCurve.AddPoint(posXPoint + lenOffset, posXIn, posXOut);
-                    break;
-                case 1:
-                    _spiralCurve.AddPoint(posZPoint + lenOffset, posZIn, posZOut);
-                    break;
-                case 2:
-                    _spiralCurve.AddPoint(negXPoint + lenOffset, negXIn, negXOut);
-                    break;
-                case 3:
-                    _spiralCurve.AddPoint(negZPoint + lenOffset, negZIn, negZOut);
-                    break;
-            }
-        }
-        
-        EmitSignal(PointProvider.SignalName.PointsUpdated);
     }
 }

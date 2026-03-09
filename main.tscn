@@ -7,31 +7,26 @@
 [ext_resource type="Script" uid="uid://dfurvd8yev6y0" path="res://player.gd" id="4_272bh"]
 [ext_resource type="Script" uid="uid://dvifam4vuwu6b" path="res://PointRenderer.cs" id="7_272bh"]
 [ext_resource type="Script" uid="uid://cj42w5ici04sw" path="res://SpiralProvider.cs" id="8_4c57u"]
-[ext_resource type="Script" uid="uid://ddu7do08k67bh" path="res://ArcProvider.cs" id="8_kek77"]
 [ext_resource type="Script" uid="uid://cu6f4p6ukvwt6" path="res://ScaledProvider.cs" id="9_efxa6"]
 
 [sub_resource type="Resource" id="Resource_272bh"]
 script = ExtResource("3_lquwl")
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_7mycd"]
-top_radius = 0.4
-bottom_radius = 0.4
+top_radius = 0.45
+bottom_radius = 0.45
 height = 1.0
 
 [sub_resource type="Resource" id="Resource_dg77c"]
 script = ExtResource("8_4c57u")
-QuarterTurns = 16.0
+Turns = 4.0
+PointCount = 400
 metadata/_custom_type_script = "uid://cj42w5ici04sw"
 
 [sub_resource type="Resource" id="Resource_ycdy4"]
 script = ExtResource("9_efxa6")
 Provider = SubResource("Resource_dg77c")
 metadata/_custom_type_script = "uid://cu6f4p6ukvwt6"
-
-[sub_resource type="Resource" id="Resource_4c57u"]
-script = ExtResource("8_kek77")
-Provider = SubResource("Resource_ycdy4")
-metadata/_custom_type_script = "uid://ddu7do08k67bh"
 
 [node name="Node3D" type="Node3D" unique_id=1426465932]
 
@@ -60,7 +55,8 @@ metadata/_custom_type_script = "uid://csjccrhj5wnx7"
 mesh = SubResource("CylinderMesh_7mycd")
 
 [node name="PointRenderer" type="Node3D" parent="." unique_id=27850479]
+transform = Transform3D(0.99999267, 0.0038222617, 0, -0.0038222617, 0.99999267, 0, 0, 0, 1, 0, 0, 0)
 script = ExtResource("7_272bh")
-Provider = SubResource("Resource_4c57u")
+Provider = SubResource("Resource_ycdy4")
 PointMesh = ExtResource("2_kek77")
 metadata/_custom_type_script = "uid://dvifam4vuwu6b"
