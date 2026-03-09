@@ -68,6 +68,7 @@ public partial class PointRenderer: Node3D
         if (!IsInsideTree()) return;
         
         var points = Provider.GetPoints();
+        var bounds = Provider.GetBounds();
         
         for (var pointId = 0; pointId < points.Count; pointId++)
         {
@@ -75,7 +76,7 @@ public partial class PointRenderer: Node3D
             
             var position = point.Position;
             if (_centered)
-                position = position - Provider.GetBounds().Position - Provider.GetBounds().Size/2;
+                position = position - bounds.Position - bounds.Size/2;
             
             Transform3D transform = new(Basis.Identity.Scaled(point.GetSizeVector()), position);
 
