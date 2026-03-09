@@ -41,9 +41,11 @@ public partial class ArcProvider: PointProvider
         var arcRadians = point.Position.Y/arcRadius * float.DegreesToRadians(_arcAngle);
         return point with
         {
-            Position =
-                new Vector3(float.Cos(arcRadians), float.Sin(arcRadians), 0)*arcRadius +
-                new Vector3(point.Position.X, 0, point.Position.Z).Rotated(Vector3.Back, arcRadians)
+            Position = new Vector3(
+                float.Cos(arcRadians)*(arcRadius+point.Position.X),
+                float.Sin(arcRadians)*(arcRadius+point.Position.X),
+                point.Position.Z
+            )
         };
     }
 
