@@ -73,6 +73,10 @@ public partial class ArcProvider: PointProvider
                 new Vector3(-arcOuterRadius, float.Sin(arcRadians)*arcOuterRadius, previousBounds.Position.Z), 
                 new Vector3(arcOuterRadius*2, arcOuterRadius - float.Sin(arcRadians)*arcOuterRadius, previousBounds.Size.Z)
             ),
+            >= 90 => new Aabb(
+                new Vector3(float.Cos(arcRadians)*arcOuterRadius, 0, previousBounds.Position.Z), 
+                new Vector3(arcOuterRadius - float.Cos(arcRadians)*arcOuterRadius, arcOuterRadius, previousBounds.Size.Z)
+            ),
             _ => new Aabb()
         };
     }
