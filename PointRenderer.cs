@@ -78,7 +78,7 @@ public partial class PointRenderer: Node3D
             if (_centered)
                 position = position - bounds.Position - bounds.Size/2;
             
-            Transform3D transform = new(Basis.Identity.Scaled(point.GetSizeVector()), position);
+            Transform3D transform = new(Basis.Identity.ScaledLocal(point.GetSizeVector()), position);
 
             if (_instanceCache.Count < pointId + 1)
             {

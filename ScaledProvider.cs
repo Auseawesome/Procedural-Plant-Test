@@ -48,7 +48,7 @@ public partial class ScaledProvider: PointProvider
 
     public override List<Point> GetPoints()
     {
-        return Provider?.GetPoints().Select(pos => pos.Scaled(PositionScale, SizeScale)).ToList();
+        return Provider?.GetPoints().Select(point => point.Scaled(PositionScale, SizeScale)).ToList();
     }
 
     public override Aabb GetBounds()
