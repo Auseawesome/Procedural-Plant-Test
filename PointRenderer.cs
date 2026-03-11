@@ -62,7 +62,7 @@ public partial class PointRenderer: Node3D
         }
     }
 
-    public void UpdateMesh()
+    private void UpdateMesh()
     {
         if (Provider is null) return;
         if (!IsInsideTree()) return;
