@@ -55,7 +55,6 @@ public partial class TubeRenderer : Node3D
 		if (!IsInsideTree()) return;
 
 		var points = Provider.GetPoints();
-		var bounds = Provider.GetBounds();
 		if (_tubeMesh is null)
 		{
 			_tubeMesh = new ImmediateMesh();
@@ -69,38 +68,30 @@ public partial class TubeRenderer : Node3D
 
 		Transform3D transform = new(Basis.Identity, Vector3.Zero);
 		RenderingServer.InstanceSetTransform(_renderingInstance, transform);
-
-		// Tessellate Tube
-		var previousNormal = _calcRingNormal(points[0], points[1]);
-		var previousCircle = _generateOriginalRing(previousNormal);
 		
+		var previousCircleNormal = _calcRingNormal(points[0], points[1]);
+		var previousCircle = _generateOriginalRing(previousCircleNormal);
+		
+		// Tessellate Tube
 		_tubeMesh.ClearSurfaces();
 		for (var pointId = 0; pointId < points.Count - 1; pointId++)
 		{
-			var point = points[pointId];
+			var nextCircleNormal = pointId == points.Count - 2
+				? previousCircleNormal
+				: _calcRingNormal(points[pointId], points[pointId + 2]);
 			
-			var nextRingNormal = pointId == points.Count - 2
-				? previousNormal
-				: _calcRingNormal(point, points[pointId + 2]);
-
-			var firstRingPositions = previousCircle;
-			
-			var secondRingPositions = _generateRingPositions(previousCircle, previousNormal.Normalized(), nextRingNormal);
+			var nextCircle = _generateRingPositions(previousCircle, previousCircleNormal.Normalized(), nextCircleNormal);
 			
 			_tubeMesh.SurfaceBegin(Mesh.PrimitiveType.TriangleStrip);
 			for (var ringSection = 0; ringSection <= _ringResolution + 1; ringSection++)
 			{
-				_tubeMesh.SurfaceSetColor(point.Color);
-				_tubeMesh.SurfaceSetNormal(secondRingPositions[ringSection % _ringResolution].Normal);
-				_tubeMesh.SurfaceAddVertex((secondRingPositions[ringSection % _ringResolution].Position * points[pointId + 1].Size) + points[pointId + 1].Position);
-				_tubeMesh.SurfaceSetColor(point.Color);
-				_tubeMesh.SurfaceSetNormal(firstRingPositions[ringSection % _ringResolution].Normal);
-				_tubeMesh.SurfaceAddVertex((firstRingPositions[ringSection % _ringResolution].Position * points[pointId].Size) + points[pointId].Position);
+				RenderTubeVertex(nextCircle[ringSection % _ringResolution], points[pointId + 1]);
+				RenderTubeVertex(previousCircle[ringSection % _ringResolution], points[pointId]);
 			}
 
 			_tubeMesh.SurfaceEnd();
-			previousCircle = secondRingPositions;
-			previousNormal = nextRingNormal;
+			previousCircle = nextCircle;
+			previousCircleNormal = nextCircleNormal;
 		}
 	}
 
@@ -109,6 +100,14 @@ public partial class TubeRenderer : Node3D
 		return (after.Position - before.Position).Normalized();
 	}
 
+	private List<RenderVertex> _generateRingPositions(List<RenderVertex> previousCircle, Vector3 previousNormal, Vector3 normal)
+	{
+		var rotAxis = previousNormal.Cross(normal).Normalized();
+		var angle = previousNormal.AngleTo(normal);
+		
+		return previousCircle.Select(vertex => vertex.Rotated(rotAxis, angle)).ToList();
+	}
+	
 	private List<RenderVertex> _generateOriginalRing(Vector3 startNormal)
 	{
 		// Generate flat ring
@@ -127,11 +126,10 @@ public partial class TubeRenderer : Node3D
 		return _generateRingPositions(points, Vector3.Up, startNormal);
 	}
 
-	private List<RenderVertex> _generateRingPositions(List<RenderVertex> previousCircle, Vector3 previousNormal, Vector3 normal)
+	private void RenderTubeVertex(RenderVertex tubeVertex, Point ringCenter)
 	{
-		var rotAxis = previousNormal.Cross(normal).Normalized();
-		var angle = previousNormal.AngleTo(normal);
-		
-		return previousCircle.Select(vertex => vertex.Rotated(rotAxis, angle)).ToList();
+		_tubeMesh.SurfaceSetColor(ringCenter.Color);
+		_tubeMesh.SurfaceSetNormal(tubeVertex.Normal);
+		_tubeMesh.SurfaceAddVertex(tubeVertex.Position * ringCenter.Size + ringCenter.Position);
 	}
 }
