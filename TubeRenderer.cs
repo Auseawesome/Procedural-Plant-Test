@@ -77,8 +77,10 @@ public partial class TubeRenderer : Node3D
 			var nextCircleNormal = pointId == points.Count - 2
 				? previousCircleNormal
 				: CalcRingNormal(points[pointId], points[pointId + 2]);
-			
-			var nextCircle = GenerateRingPositions(previousCircle, previousCircleNormal.Normalized(), nextCircleNormal);
+				
+			var nextCircle = pointId == points.Count - 2
+				? previousCircle
+				: GenerateRingPositions(previousCircle, previousCircleNormal, nextCircleNormal);
 			
 			_tubeMesh.SurfaceBegin(Mesh.PrimitiveType.TriangleStrip);
 			for (var ringSection = 0; ringSection <= _ringResolution + 1; ringSection++)
