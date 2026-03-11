@@ -18,14 +18,14 @@ height = 1.0
 
 [sub_resource type="Resource" id="Resource_dg77c"]
 script = ExtResource("8_4c57u")
-PointCount = 20
+Turns = 2.5
+PointCount = 50
 metadata/_custom_type_script = "uid://cj42w5ici04sw"
 
 [sub_resource type="Resource" id="Resource_ycdy4"]
 script = ExtResource("9_efxa6")
 Provider = SubResource("Resource_dg77c")
-PositionScale = Vector3(1, 1.026, 1)
-SizeScale = 0.2
+SizeScale = 0.1
 metadata/_custom_type_script = "uid://cu6f4p6ukvwt6"
 
 [node name="Node3D" type="Node3D" unique_id=1426465932]
