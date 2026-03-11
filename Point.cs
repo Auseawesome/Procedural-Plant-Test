@@ -2,10 +2,9 @@ using Godot;
 
 namespace ProceduralPlantTest;
 
-public readonly record struct Point(Vector3 Position, float Size, Vector3 Color)
+public readonly record struct Point(Vector3 Position, float Size, Color Color)
 {
-    public Point(Vector3 Position) : this(Position, 1, new Vector3(0f, 0f, 0f))
-    {}
+    public Point(Vector3 Position) : this(Position, 1, Colors.Black) { }
     
     // Modify position with Vector3
     public static Point operator +(Point a, Vector3 b) => a with {Position = a.Position + b};
@@ -47,5 +46,10 @@ public readonly record struct Point(Vector3 Position, float Size, Vector3 Color)
             Position = Position * posScale,
             Size = Size * sizeScale
         };
+    }
+
+    public Vector3 SolidColor()
+    {
+        return new Vector3(Color.R, Color.G, Color.B);
     }
 }

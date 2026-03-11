@@ -78,7 +78,6 @@ public partial class TubeRenderer : Node3D
 		for (var pointId = 0; pointId < points.Count - 1; pointId++)
 		{
 			var point = points[pointId];
-			var color = new Color(point.Color.X, point.Color.Y, point.Color.Z);
 			
 			var nextRingNormal = pointId == points.Count - 2
 				? previousNormal
@@ -91,10 +90,10 @@ public partial class TubeRenderer : Node3D
 			_tubeMesh.SurfaceBegin(Mesh.PrimitiveType.TriangleStrip);
 			for (var ringSection = 0; ringSection <= _ringResolution + 1; ringSection++)
 			{
-				_tubeMesh.SurfaceSetColor(color);
+				_tubeMesh.SurfaceSetColor(point.Color);
 				_tubeMesh.SurfaceSetNormal(secondRingPositions[ringSection % _ringResolution].Normal);
 				_tubeMesh.SurfaceAddVertex((secondRingPositions[ringSection % _ringResolution].Position * points[pointId + 1].Size) + points[pointId + 1].Position);
-				_tubeMesh.SurfaceSetColor(color);
+				_tubeMesh.SurfaceSetColor(point.Color);
 				_tubeMesh.SurfaceSetNormal(firstRingPositions[ringSection % _ringResolution].Normal);
 				_tubeMesh.SurfaceAddVertex((firstRingPositions[ringSection % _ringResolution].Position * points[pointId].Size) + points[pointId].Position);
 			}

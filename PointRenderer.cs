@@ -86,7 +86,7 @@ public partial class PointRenderer: Node3D
                 RenderingServer.InstanceSetScenario(renderInstance, GetWorld3D().Scenario);
                 RenderingServer.InstanceSetBase(renderInstance, PointMesh.GetRid());
                 RenderingServer.InstanceSetTransform(renderInstance, transform);
-                RenderingServer.InstanceGeometrySetShaderParameter(renderInstance, "color", point.Color);
+                RenderingServer.InstanceGeometrySetShaderParameter(renderInstance, "color", point.SolidColor());
                 
                 _instanceCache.Add(renderInstance);
             }
