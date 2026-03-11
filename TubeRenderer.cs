@@ -71,8 +71,8 @@ public partial class TubeRenderer : Node3D
 		RenderingServer.InstanceSetTransform(_renderingInstance, transform);
 
 		// Tessellate Tube
-		var previousCircle = _generateOriginalRing();
-		var previousNormal = Vector3.Up;
+		var previousNormal = _calcRingNormal(points[0], points[1]);
+		var previousCircle = _generateOriginalRing(previousNormal);
 		
 		_tubeMesh.ClearSurfaces();
 		for (var pointId = 0; pointId < points.Count - 1; pointId++)
@@ -85,11 +85,6 @@ public partial class TubeRenderer : Node3D
 				: _calcRingNormal(point, points[pointId + 2]);
 
 			var firstRingPositions = previousCircle;
-			if (pointId == 0)
-			{
-				var ringNormal = _calcRingNormal(point, points[pointId + 1]);
-				firstRingPositions = _generateRingPositions(previousCircle, previousNormal, ringNormal);
-			}
 			
 			var secondRingPositions = _generateRingPositions(previousCircle, previousNormal.Normalized(), nextRingNormal);
 			
@@ -115,8 +110,9 @@ public partial class TubeRenderer : Node3D
 		return (after.Position - before.Position).Normalized();
 	}
 
-	private List<RenderVertex> _generateOriginalRing()
+	private List<RenderVertex> _generateOriginalRing(Vector3 startNormal)
 	{
+		// Generate flat ring
 		List<RenderVertex> points = [];
 		for (var pointId = 0; pointId < _ringResolution; pointId++)
 		{
@@ -129,7 +125,7 @@ public partial class TubeRenderer : Node3D
 			points.Add(point);
 		}
 
-		return points;
+		return _generateRingPositions(points, Vector3.Up, startNormal);
 	}
 
 	private List<RenderVertex> _generateRingPositions(List<RenderVertex> previousCircle, Vector3 previousNormal, Vector3 normal)
