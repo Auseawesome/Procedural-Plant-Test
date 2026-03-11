@@ -87,12 +87,14 @@ public partial class TubeRenderer : Node3D
 			var secondRingPositions = _generateRingPositions(points[pointId + 1], secondRingNormal);
 
 			_tubeMesh.SurfaceBegin(Mesh.PrimitiveType.TriangleStrip);
-			for (var ringSection = _ringResolution + 1; ringSection >= 0; ringSection--)
+			for (var ringSection = 0; ringSection <= _ringResolution + 1; ringSection++)
 			{
 				_tubeMesh.SurfaceSetColor(color);
-				_tubeMesh.SurfaceAddVertex(firstRingPositions[ringSection % _ringResolution]);
+				_tubeMesh.SurfaceSetNormal(secondRingPositions[ringSection % _ringResolution].Normal);
+				_tubeMesh.SurfaceAddVertex(secondRingPositions[ringSection % _ringResolution].Position);
 				_tubeMesh.SurfaceSetColor(color);
-				_tubeMesh.SurfaceAddVertex(secondRingPositions[ringSection % _ringResolution]);
+				_tubeMesh.SurfaceSetNormal(firstRingPositions[ringSection % _ringResolution].Normal);
+				_tubeMesh.SurfaceAddVertex(firstRingPositions[ringSection % _ringResolution].Position);
 			}
 
 			_tubeMesh.SurfaceEnd();
@@ -101,19 +103,19 @@ public partial class TubeRenderer : Node3D
 
 	private Vector3 _calcRingNormal(Point before, Point after)
 	{
-		return (before.Position + after.Position).Normalized();
+		return (after.Position - before.Position).Normalized();
 	}
 
-	private List<Vector3> _generateRingPositions(Point centre, Vector3 normal)
+	private List<RenderVertex> _generateRingPositions(Point centre, Vector3 normal)
 	{
 		var rotAxis = Vector3.Up.Cross(normal).Normalized();
 		var angle = Vector3.Up.AngleTo(normal);
 		
-		List<Vector3> points = [];
+		List<RenderVertex> points = [];
 		for (var pointId = 0; pointId < _ringResolution; pointId++)
 		{
 			var turnAngle = float.Tau * pointId / _ringResolution;
-			var point = new Vector3(
+			var point = new RenderVertex(
 				float.Cos(turnAngle) * centre.Size,
 				0,
 				float.Sin(turnAngle) * centre.Size
