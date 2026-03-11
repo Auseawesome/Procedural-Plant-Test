@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://dfurvd8yev6y0" path="res://player.gd" id="4_272bh"]
 [ext_resource type="Script" uid="uid://ditb42w5iw3xl" path="res://TubeRenderer.cs" id="5_5vw27"]
 [ext_resource type="Script" uid="uid://cj42w5ici04sw" path="res://SpiralProvider.cs" id="8_4c57u"]
+[ext_resource type="Script" uid="uid://ddu7do08k67bh" path="res://ArcProvider.cs" id="8_5vw27"]
 [ext_resource type="Script" uid="uid://cu6f4p6ukvwt6" path="res://ScaledProvider.cs" id="9_efxa6"]
 
 [sub_resource type="Resource" id="Resource_272bh"]
@@ -18,8 +19,8 @@ height = 1.0
 
 [sub_resource type="Resource" id="Resource_dg77c"]
 script = ExtResource("8_4c57u")
-Turns = 2.5
-PointCount = 50
+Turns = 8.0
+PointCount = 120
 metadata/_custom_type_script = "uid://cj42w5ici04sw"
 
 [sub_resource type="Resource" id="Resource_ycdy4"]
@@ -27,6 +28,12 @@ script = ExtResource("9_efxa6")
 Provider = SubResource("Resource_dg77c")
 SizeScale = 0.1
 metadata/_custom_type_script = "uid://cu6f4p6ukvwt6"
+
+[sub_resource type="Resource" id="Resource_kek77"]
+script = ExtResource("8_5vw27")
+Provider = SubResource("Resource_ycdy4")
+ArcAngle = 135.0
+metadata/_custom_type_script = "uid://ddu7do08k67bh"
 
 [node name="Node3D" type="Node3D" unique_id=1426465932]
 
@@ -58,6 +65,6 @@ mesh = SubResource("CylinderMesh_7mycd")
 [node name="TubeRenderer" type="Node3D" parent="." unique_id=336245799]
 transform = Transform3D(0.99999267, 0.0038222617, 0, -0.0038222617, 0.99999267, 0, 0, 0, 1, 0, 0, 0)
 script = ExtResource("5_5vw27")
-Provider = SubResource("Resource_ycdy4")
+Provider = SubResource("Resource_kek77")
 RingResolution = 10
 metadata/_custom_type_script = "uid://ditb42w5iw3xl"
