@@ -33,6 +33,19 @@ public partial class TubeRenderer : Node3D
 			UpdateMesh();
 		}
 	}
+	
+	private Material _surfaceMaterial;
+
+	[Export]
+	public Material SurfaceMaterial
+	{
+		get => _surfaceMaterial;
+		set
+		{
+			_surfaceMaterial = value;
+			UpdateMesh();
+		}
+	}
 
 	private Rid _renderingInstance;
 	private ImmediateMesh _tubeMesh;
@@ -102,6 +115,7 @@ public partial class TubeRenderer : Node3D
 			}
 
 			_tubeMesh.SurfaceEnd();
+			_tubeMesh.SurfaceSetMaterial(circlePoint, _surfaceMaterial);
 		}
 	}
 
