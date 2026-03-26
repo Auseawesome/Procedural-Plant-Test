@@ -20,7 +20,7 @@ height = 1.0
 [sub_resource type="Resource" id="Resource_dg77c"]
 script = ExtResource("8_4c57u")
 Turns = 8.0
-PointCount = 120
+PointCount = 160
 metadata/_custom_type_script = "uid://cj42w5ici04sw"
 
 [sub_resource type="Resource" id="Resource_ycdy4"]
