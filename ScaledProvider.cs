@@ -35,7 +35,7 @@ public partial class ScaledProvider: PointProvider
         }
     }
     
-    private float _sizeScale = 1;
+    private float _sizeScale = 0.1f;
 
     [Export] public float SizeScale {
         get => _sizeScale;
