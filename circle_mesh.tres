@@ -8,4 +8,3 @@ shader = ExtResource("1_8pxda")
 
 [resource]
 material = SubResource("ShaderMaterial_8pxda")
-size = Vector2(0.1, 0.1)
