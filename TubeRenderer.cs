@@ -81,30 +81,39 @@ public partial class TubeRenderer : Node3D
 		
 		var firstCircleNormal = CalcRingNormal(points[0], points[1]);
 		
+		var nextFirstPoint = GenerateCirclePoint(firstCircleNormal);
+		
 		// Tessellate Tube
 		_tubeMesh.ClearSurfaces();
 		
 		for (var circlePoint = 0; circlePoint < _ringResolution; circlePoint++)
 		{
-			var nextPoint = circlePoint+1;
+			var firstPoint = nextFirstPoint;
+			var secondPoint = GenerateCirclePoint(firstCircleNormal, (circlePoint+1)%_ringResolution);
+			
+			nextFirstPoint = secondPoint;
 			
 			var circleNormal = firstCircleNormal;
-			var linePoints =
-				GenerateOriginalRing(firstCircleNormal, circlePoint, nextPoint);
-			
+
 			_tubeMesh.SurfaceBegin(Mesh.PrimitiveType.TriangleStrip);
-			for (var pointId = 0; pointId < points.Count - 1; pointId++)
+			
+			RenderTubeVertex(secondPoint, points[0]);
+			RenderTubeVertex(firstPoint, points[0]);
+			
+			for (var pointId = 1; pointId < points.Count; pointId++)
 			{
-				var nextCircleNormal = pointId == points.Count - 2
-					? CalcRingNormal(points[pointId], points[pointId + 1])
-					: CalcRingNormal(points[pointId], points[pointId + 2]);
+				var nextCircleNormal = pointId == points.Count - 1
+					? CalcRingNormal(points[pointId - 1], points[pointId])
+					: CalcRingNormal(points[pointId - 1], points[pointId + 1]);
 				
-				linePoints = pointId == points.Count - 2
-					? linePoints
-					: GenerateRingPositions(linePoints, circleNormal, nextCircleNormal);
+				var spinAxis = circleNormal.Cross(nextCircleNormal).Normalized();
+				var spinAngle = circleNormal.AngleTo(nextCircleNormal);
 				
-				RenderTubeVertex(linePoints[0], points[pointId]);
-				RenderTubeVertex(linePoints[1], points[pointId]);
+				firstPoint = firstPoint.Rotated(spinAxis, spinAngle);
+				secondPoint = secondPoint.Rotated(spinAxis, spinAngle);
+				
+				RenderTubeVertex(secondPoint, points[pointId]);
+				RenderTubeVertex(firstPoint, points[pointId]);
 				
 				circleNormal = nextCircleNormal;
 			}
@@ -118,44 +127,23 @@ public partial class TubeRenderer : Node3D
 	{
 		return (after.Position - before.Position).Normalized();
 	}
-
-	private static List<RenderVertex> GenerateRingPositions(List<RenderVertex> previousCircle, Vector3 previousNormal, Vector3 normal)
-	{
-		var rotAxis = previousNormal.Cross(normal).Normalized();
-		var angle = previousNormal.AngleTo(normal);
-		
-		return previousCircle.Select(vertex => vertex.Rotated(rotAxis, angle)).ToList();
-	}
 	
-	private List<RenderVertex> GenerateOriginalRing(Vector3 startNormal, int startIndex = 0, int endIndex = -1)
+	private RenderVertex GenerateCirclePoint(Vector3 startNormal, int index = 0)
 	{
-		var reverseList = endIndex < startIndex;
-		if (endIndex < 0) endIndex = _ringResolution - endIndex;
-
-		// Swap end and start index
-		if (reverseList)
-		{
-			endIndex ^= startIndex;
-			startIndex ^= endIndex;
-			endIndex ^= startIndex;
-		}
+		var turnAngle = float.Tau * index / _ringResolution;
 		
-		// Generate flat ring
-		List<RenderVertex> points = [];
-		for (var pointId = startIndex; pointId <= endIndex; pointId++)
-		{
-			var turnAngle = float.Tau * pointId / _ringResolution;
-			var point = new RenderVertex(
-				float.Cos(turnAngle),
-				0,
-				float.Sin(turnAngle)
-			);
-			points.Add(point);
-		}
+		var flatPoint = new RenderVertex(
+			float.Cos(turnAngle),
+			0,
+			float.Sin(turnAngle)
+		);
 		
-		if (reverseList) points.Reverse();
-
-		return GenerateRingPositions(points, Vector3.Up, startNormal);
+		if (startNormal == Vector3.Up) return flatPoint;
+		
+		var spinAxis = startNormal.Cross(Vector3.Up).Normalized();
+		var spinAngle = startNormal.AngleTo(Vector3.Up);
+		
+		return flatPoint.Rotated(spinAxis, spinAngle);
 	}
 
 	private void RenderTubeVertex(RenderVertex tubeVertex, Point ringCenter)
