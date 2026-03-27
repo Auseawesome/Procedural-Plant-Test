@@ -21,7 +21,7 @@ public partial class TubeRenderer : Node3D
 		}
 	}
 
-	private int _ringResolution = 10;
+	private int _ringResolution = 16;
 
 	[Export]
 	public int RingResolution

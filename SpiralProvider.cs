@@ -19,7 +19,7 @@ public partial class SpiralProvider: PointProvider
         }
     }
     
-    private int _pointCount = 200;
+    private int _pointCount = 1024;
 
     [Export(PropertyHint.Range, "0,1000,or_greater")]
     public int PointCount
