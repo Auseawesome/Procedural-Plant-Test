@@ -97,7 +97,7 @@ public partial class TubeRenderer : Node3D
 			for (var pointId = 0; pointId < points.Count - 1; pointId++)
 			{
 				var nextCircleNormal = pointId == points.Count - 2
-					? circleNormal
+					? CalcRingNormal(points[pointId], points[pointId + 1])
 					: CalcRingNormal(points[pointId], points[pointId + 2]);
 				
 				linePoints = pointId == points.Count - 2
