@@ -125,7 +125,7 @@ public partial class TubeRenderer : Node3D
 
 	private static Vector3 CalcRingNormal(Point before, Point after)
 	{
-		return (after.Position - before.Position).Normalized();
+		return after.Position - before.Position;
 	}
 	
 	private RenderVertex GenerateCirclePoint(Vector3 startNormal, int index = 0)
