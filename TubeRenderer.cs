@@ -128,11 +128,11 @@ public partial class TubeRenderer : Node3D
 		return after.Position - before.Position;
 	}
 	
-	private RenderVertex GenerateCirclePoint(Vector3 startNormal, int index = 0)
+	private Vector3 GenerateCirclePoint(Vector3 startNormal, int index = 0)
 	{
 		var turnAngle = float.Tau * index / _ringResolution;
 		
-		var flatPoint = new RenderVertex(
+		var flatPoint = new Vector3(
 			float.Cos(turnAngle),
 			0,
 			float.Sin(turnAngle)
@@ -146,10 +146,10 @@ public partial class TubeRenderer : Node3D
 		return flatPoint.Rotated(spinAxis, spinAngle);
 	}
 
-	private void RenderTubeVertex(RenderVertex tubeVertex, Point ringCenter)
+	private void RenderTubeVertex(Vector3 tubeVertex, Point ringCenter)
 	{
 		_tubeMesh.SurfaceSetColor(ringCenter.Color);
-		_tubeMesh.SurfaceSetNormal(tubeVertex.Normal);
-		_tubeMesh.SurfaceAddVertex(tubeVertex.Position * ringCenter.Size + ringCenter.Position);
+		_tubeMesh.SurfaceSetNormal(tubeVertex.Normalized());
+		_tubeMesh.SurfaceAddVertex(tubeVertex * ringCenter.Size + ringCenter.Position);
 	}
 }
