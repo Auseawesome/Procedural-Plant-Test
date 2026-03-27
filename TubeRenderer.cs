@@ -80,7 +80,6 @@ public partial class TubeRenderer : Node3D
 		}
 		
 		var firstCircleNormal = CalcRingNormal(points[0], points[1]);
-		var firstPoint = GenerateOriginalRing(firstCircleNormal, 0, 1).First();
 		
 		// Tessellate Tube
 		_tubeMesh.ClearSurfaces();
