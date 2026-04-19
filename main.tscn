@@ -19,28 +19,6 @@ top_radius = 0.45
 bottom_radius = 0.45
 height = 1.0
 
-[sub_resource type="Resource" id="Resource_dg77c"]
-script = ExtResource("8_4c57u")
-Turns = 8.0
-metadata/_custom_type_script = "uid://cj42w5ici04sw"
-
-[sub_resource type="Resource" id="Resource_ycdy4"]
-script = ExtResource("9_efxa6")
-Provider = SubResource("Resource_dg77c")
-SizeScale = 0.1
-metadata/_custom_type_script = "uid://cu6f4p6ukvwt6"
-
-[sub_resource type="Resource" id="Resource_kek77"]
-script = ExtResource("8_5vw27")
-Provider = SubResource("Resource_ycdy4")
-ArcAngle = 135.0
-metadata/_custom_type_script = "uid://ddu7do08k67bh"
-
-[sub_resource type="Resource" id="Resource_efxa6"]
-script = ExtResource("9_4c57u")
-Provider = SubResource("Resource_kek77")
-metadata/_custom_type_script = "uid://bche7egidnyek"
-
 [node name="Node3D" type="Node3D" unique_id=1426465932]
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=849368088]
@@ -69,9 +47,30 @@ spot_range = 20.0
 visible = false
 mesh = SubResource("CylinderMesh_7mycd")
 
-[node name="TubeRenderer" type="Node3D" parent="." unique_id=336245799]
+[node name="TubeRenderer" type="Node3D" parent="." unique_id=336245799 node_paths=PackedStringArray("Provider")]
 transform = Transform3D(0.99999267, 0.0038222617, 0, -0.0038222617, 0.99999267, 0, 0, 0, 1, 0, 0, 0)
 script = ExtResource("5_5vw27")
-Provider = SubResource("Resource_efxa6")
+Provider = NodePath("GradientProvider")
 SurfaceMaterial = ExtResource("9_kek77")
 metadata/_custom_type_script = "uid://ditb42w5iw3xl"
+
+[node name="GradientProvider" type="Node" parent="TubeRenderer" unique_id=1378830776 node_paths=PackedStringArray("Provider")]
+script = ExtResource("9_4c57u")
+Provider = NodePath("ArcProvider")
+metadata/_custom_type_script = "uid://bche7egidnyek"
+
+[node name="ArcProvider" type="Node" parent="TubeRenderer/GradientProvider" unique_id=330351217 node_paths=PackedStringArray("Provider")]
+script = ExtResource("8_5vw27")
+Provider = NodePath("ScaledProvider")
+ArcAngle = 135.0
+metadata/_custom_type_script = "uid://ddu7do08k67bh"
+
+[node name="ScaledProvider" type="Node" parent="TubeRenderer/GradientProvider/ArcProvider" unique_id=126604367 node_paths=PackedStringArray("Provider")]
+script = ExtResource("9_efxa6")
+Provider = NodePath("SpiralProvider")
+metadata/_custom_type_script = "uid://cu6f4p6ukvwt6"
+
+[node name="SpiralProvider" type="Node" parent="TubeRenderer/GradientProvider/ArcProvider/ScaledProvider" unique_id=2058618069]
+script = ExtResource("8_4c57u")
+Turns = 8.0
+metadata/_custom_type_script = "uid://cj42w5ici04sw"

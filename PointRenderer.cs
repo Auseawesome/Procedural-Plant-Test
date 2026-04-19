@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Godot;
+using ProceduralPlantTest.Provider;
 
 namespace ProceduralPlantTest;
 

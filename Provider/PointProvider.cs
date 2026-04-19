@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Godot;
 
-namespace ProceduralPlantTest;
+namespace ProceduralPlantTest.Provider;
 
 [GlobalClass]
-public abstract partial class PointProvider: Resource, IEnumerable<Point>
+public abstract partial class PointProvider: Node, IEnumerable<Point>
 {
     [Signal] public delegate void PointsUpdatedEventHandler();
     public abstract List<Point> GetPoints();

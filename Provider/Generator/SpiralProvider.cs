@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Godot;
 
-namespace ProceduralPlantTest;
+namespace ProceduralPlantTest.Provider.Generator;
 
 [GlobalClass]
 public partial class SpiralProvider: PointProvider

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Godot;
 
-namespace ProceduralPlantTest;
+namespace ProceduralPlantTest.Provider.Modifier;
 
 [GlobalClass]
 public partial class GradientProvider : PointProvider

@@ -3,7 +3,7 @@ using System.Linq;
 using Godot;
 using Vector3 = Godot.Vector3;
 
-namespace ProceduralPlantTest;
+namespace ProceduralPlantTest.Provider.Shaper;
 
 [GlobalClass]
 public partial class ArcProvider: PointProvider
